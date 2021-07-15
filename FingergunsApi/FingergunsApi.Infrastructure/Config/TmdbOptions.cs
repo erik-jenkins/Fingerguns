@@ -1,4 +1,4 @@
-namespace FingergunsApi.App.Config
+namespace FingergunsApi.Infrastructure.Config
 {
     public class TmdbOptions
     {

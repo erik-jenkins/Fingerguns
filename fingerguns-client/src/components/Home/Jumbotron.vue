@@ -4,8 +4,10 @@
     <p>Some fun things you can do here:</p>
     <ul>
       <li>
-        <router-link :to="{ name: 'moviepicker' }">Pick</router-link> a movie to
-        watch tonight!
+        <router-link :to="{ name: 'docket', params: { docketId: 1 } }"
+          >Pick
+        </router-link>
+        a movie to watch tonight!
       </li>
       <li>
         <router-link to="#">Track</router-link> the movies you've watched!
@@ -36,9 +38,9 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .jumbotron {
-  background: #EEE;
+  background: #eee;
   padding: 1em;
-  box-sizing: padding-box;
+  border-radius: 4px;
 }
 
 .icon {

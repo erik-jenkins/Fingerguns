@@ -3,7 +3,9 @@
     <router-link :to="{ name: 'home' }">Fingerguns</router-link>
     <div class="nav-links">
       <div class="left">
-        <router-link :to="{ name: 'moviepicker' }">Movie Picker</router-link>
+        <router-link :to="{ name: 'docket', params: { docketId: 1 } }">
+          Docket
+        </router-link>
       </div>
       <div class="right">
         <router-link :to="{ name: 'login' }">Login</router-link>

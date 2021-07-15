@@ -11,9 +11,11 @@
   "dependencies": {
     "@microsoft/signalr": "^5.0.7",
     "@types/canvas-confetti": "^1.4.2",
+    "@types/lodash": "^4.14.171",
     "axios": "^0.21.1",
     "canvas-confetti": "^1.4.0",
     "core-js": "^3.6.5",
+    "lodash": "^4.17.21",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "@/views/Home.vue";
-import MoviePicker from "@/views/MoviePicker.vue";
+import Docket from "@/views/Docket.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import { nextTick } from "vue";
@@ -13,9 +13,9 @@ const routes: Array<RouteRecordRaw> = [
     component: Home,
   },
   {
-    path: "/moviepicker",
-    name: "moviepicker",
-    component: MoviePicker,
+    path: "/dockets/:docketId",
+    name: "docket",
+    component: Docket,
   },
   {
     path: "/login",

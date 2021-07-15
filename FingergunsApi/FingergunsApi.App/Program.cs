@@ -1,5 +1,5 @@
 using System.IO;
-using FingergunsApi.App.Config;
+using FingergunsApi.Infrastructure.Config;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 

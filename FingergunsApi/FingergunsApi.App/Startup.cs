@@ -1,5 +1,5 @@
 using System;
-using FingergunsApi.App.Config;
+using FingergunsApi.App.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +22,7 @@ namespace FingergunsApi.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddMemoryCache();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "FingergunsApi.App", Version = "v1"}); });
             services.AddSignalR(options => { options.EnableDetailedErrors = true; });
             services.AddCors(options =>
@@ -35,12 +36,7 @@ namespace FingergunsApi.App
                 });
             });
 
-            services.Configure<TmdbOptions>(options =>
-            {
-                var apiKey = Environment.GetEnvironmentVariable(TmdbOptions.EnvironmentVariable);
-                options.ApiKey = apiKey;
-            });
-            services.RegisterApplicationServices();
+            services.RegisterApplicationServices(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,7 +58,7 @@ namespace FingergunsApi.App
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<MoviesHub>("/movieshub");
+                endpoints.MapHub<DocketHub>("/docketshub");
             });
         }
     }

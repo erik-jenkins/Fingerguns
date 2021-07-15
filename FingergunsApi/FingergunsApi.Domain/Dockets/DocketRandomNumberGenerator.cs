@@ -1,15 +1,15 @@
 using System;
 
-namespace FingergunsApi.App
+namespace FingergunsApi.Domain.Dockets
 {
-    public interface IMovieRandomNumberGenerator
+    public interface IDocketRandomNumberGenerator
     {
         int GetRandomMovieIndex(int numberOfMovies);
         double[] GetSelectionDelays(int numberOfMovies);
         void SetRandom(Random random);
     }
 
-    public class MovieRandomNumberGenerator : IMovieRandomNumberGenerator
+    public class DocketRandomNumberGenerator : IDocketRandomNumberGenerator
     {
         private Random _random = new Random();
 

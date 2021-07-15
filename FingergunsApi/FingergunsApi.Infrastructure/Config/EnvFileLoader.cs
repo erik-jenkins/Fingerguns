@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace FingergunsApi.App.Config
+namespace FingergunsApi.Infrastructure.Config
 {
     public static class EnvFileLoader
     {

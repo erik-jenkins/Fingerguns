@@ -1,50 +1,51 @@
 <template>
   <div class="pick-movie">
-    <button @click.prevent="handlePickMovie">Pick movie</button>
+    <button @click.prevent="handleSelectMovie">Pick movie</button>
     <transition name="fade">
       <p v-if="currentMovieIndex !== null">
-        {{ movies[currentMovieIndex].title }}
+        {{ docket.movies[currentMovieIndex].title }}
       </p>
     </transition>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, inject } from "vue";
 
-import useMoviesApi from "@/composables/useMoviesApi";
+import { DocketEvent, IDocketManager } from "@/composables/useDockets";
 import confetti from "canvas-confetti";
 
 export default defineComponent({
   data() {
     return {
       currentMovieIndex: null as number | null,
-      isPickingMovie: false,
+      isSelectingMovie: false,
     };
   },
   methods: {
-    async handlePickMovie() {
-      if (!this.isPickingMovie) {
-        this.isPickingMovie = true;
-        await this.pickMovie();
+    async handleSelectMovie() {
+      if (!this.isSelectingMovie) {
+        this.isSelectingMovie = true;
+        await this.selectMovie();
       }
     },
-    async handleMoviePicked(
+    async handleMovieSelected(
       initialMovieIndex: number,
       selectionDelays: number[]
     ) {
       this.currentMovieIndex = initialMovieIndex;
       if (this.currentMovieIndex == null) return;
+      if (this.docket == null) return;
 
       for (let i = 0; i < selectionDelays.length; i++) {
         const currentDelay = selectionDelays[i];
         await sleep(currentDelay);
         const newMovieIndex: number =
-          (this.currentMovieIndex + 1) % this.movies.length;
+          (this.currentMovieIndex + 1) % this.docket.movies.length;
         this.currentMovieIndex = newMovieIndex;
       }
 
-      this.isPickingMovie = false;
+      this.isSelectingMovie = false;
       confetti({
         particleCount: 100,
         spread: 70,
@@ -53,12 +54,17 @@ export default defineComponent({
     },
   },
   setup() {
-    const { movies, registerEventHandler, pickMovie } = useMoviesApi();
+    const docketManager: IDocketManager | undefined = inject("docketManager");
+    if (docketManager == null) throw Error();
 
-    return { movies, registerEventHandler, pickMovie };
+    const { docket, selectMovie, registerEventHandler } = docketManager;
+    return { docket, selectMovie, registerEventHandler };
   },
   mounted() {
-    this.registerEventHandler("MovieSelected", this.handleMoviePicked);
+    this.registerEventHandler(
+      DocketEvent.MOVIE_SELECTED,
+      this.handleMovieSelected
+    );
   },
 });
 

@@ -1,7 +1,7 @@
 <template>
-  <ul v-if="movies.length">
-    <li v-for="movie in movies" :key="movie.id">
-      <remove-movie :movie="movie" />
+  <ul v-if="docket?.movies.length">
+    <li v-for="movie in docket.movies" :key="movie.id">
+      <remove-movie :movie-id="movie.id" />
       {{ movie.title }}
     </li>
   </ul>
@@ -10,9 +10,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { IDocketManager } from "@/composables/useDockets";
+import { defineComponent, inject } from "vue";
 
-import useMoviesApi from "@/composables/useMoviesApi";
 import RemoveMovie from "./RemoveMovie.vue";
 
 export default defineComponent({
@@ -24,13 +24,15 @@ export default defineComponent({
   },
   async mounted() {
     this.isLoadingMovies = true;
-    await this.fetchMovies();
+    await this.loadDocket();
     this.isLoadingMovies = false;
   },
   setup() {
-    const { movies, fetchMovies, addMovie } = useMoviesApi();
+    const docketManager: IDocketManager | undefined = inject("docketManager");
+    if (docketManager == null) throw Error();
 
-    return { movies, fetchMovies, addMovie };
+    const { docket, loadDocket } = docketManager;
+    return { docket, loadDocket };
   },
 });
 </script>

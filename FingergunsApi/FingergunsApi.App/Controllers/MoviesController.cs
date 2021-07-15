@@ -1,26 +1,27 @@
-using System;
 using System.Threading.Tasks;
-using FingergunsApi.App.Data;
+using System.Web;
 using Microsoft.AspNetCore.Mvc;
+using TMDbLib.Client;
 
 namespace FingergunsApi.App.Controllers
 {
     [Route("api/[controller]")]
     public class MoviesController : ControllerBase
     {
-        private readonly IMovieRepository _movieRepository;
+        private readonly TMDbClient _tmDbClient;
 
-        public MoviesController(IMovieRepository movieRepository)
+        public MoviesController(TMDbClient tmDbClient)
         {
-            _movieRepository = movieRepository;
+            _tmDbClient = tmDbClient;
         }
 
         [HttpGet]
-        [Route("")]
-        public async Task<IActionResult> GetMovies()
+        [Route("search")]
+        public async Task<IActionResult> SearchMovies(string query, int? page = null)
         {
-            await Task.Delay(TimeSpan.FromMilliseconds(100));
-            return Ok(_movieRepository.GetMovies());
+            var decodedQuery = HttpUtility.UrlDecode(query);
+            var searchResponse = (await _tmDbClient.SearchMovieAsync(decodedQuery)).Results;
+            return Ok(searchResponse);
         }
     }
 }
