@@ -38,7 +38,7 @@ namespace FingergunsApi.Infrastructure.Tmdb
             if (_memoryCache.TryGetValue(cacheKey, out Movie movie))
                 return movie;
 
-            movie = await _tmDbClient.GetMovieAsync(id);
+            movie = await _tmDbClient.GetMovieAsync(id, MovieMethods.Credits);
             _memoryCache.Set(cacheKey, movie, _memoryCacheEntryOptions);
 
             return movie;

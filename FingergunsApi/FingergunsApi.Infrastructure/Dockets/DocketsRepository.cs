@@ -21,7 +21,9 @@ namespace FingergunsApi.Infrastructure.Dockets
         {
             new MovieDto {Id = 36992},
             new MovieDto {Id = 15239},
-            new MovieDto {Id = 649006}
+            new MovieDto {Id = 649006},
+            new MovieDto {Id = 1701},
+            new MovieDto {Id = 109423}
         };
 
         private readonly ITmdbRepository _tmdbRepository;

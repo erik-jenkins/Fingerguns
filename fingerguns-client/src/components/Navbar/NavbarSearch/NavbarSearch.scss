@@ -1,0 +1,24 @@
+@import "~bootswatch/dist/pulse/variables";
+
+.search-movies {
+  
+  width: 250px;
+  background: lighten($primary, 10%);
+  padding: 0 1em;
+  border-radius: 4px;
+  border: none;
+}
+
+.search-movies, 
+.search-movies::placeholder {
+  color: lighten($primary, 40%) !important;
+}
+
+.search-movies:focus,
+.search-movies:focus::placeholder {
+  background: lighten($primary, 15%) !important;
+}
+
+.search-movies:focus {
+  color: lighten($primary, 60%) !important;
+}
