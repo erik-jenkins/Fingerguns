@@ -1,4 +1,4 @@
-import { Movie } from "types";
+import { Movie, PosterSize } from "types";
 import { getAtMostN } from "utilities";
 
 export const getDirectorsString = (movie: Movie) => {
@@ -26,3 +26,8 @@ export const getTopStarringString = (
 
   return `Starring ${topStarringNames.join(", ")}`;
 };
+
+export function getFullPosterPath(movie: Movie, size: PosterSize): string {
+  const basePosterPath = "https://image.tmdb.org/t/p";
+  return `${basePosterPath}/${size}${movie.posterPath}`;
+}

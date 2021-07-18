@@ -1,6 +1,6 @@
 import { HubConnectionBuilder, HubConnectionState } from "@microsoft/signalr";
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 import { Docket, Movie } from "types";
 
@@ -13,23 +13,43 @@ export enum DocketEvent {
   MovieSelected = "MovieSelected",
 }
 
-function useDocket(docketId: number) {
+export interface IDocketContext {
+  docket: Docket | null;
+  isDocketLoading: boolean;
+  selected: ISelected | null;
+  addMovie: (movieId: number) => Promise<void>;
+  removeMovie: (movieId: number) => Promise<void>;
+  selectMovie: () => void;
+}
+
+const defaultDocketContext: IDocketContext = {
+  docket: null,
+  isDocketLoading: false,
+  selected: null,
+  addMovie: (movieId) => Promise.resolve(),
+  removeMovie: (movieId) => Promise.resolve(),
+  selectMovie: () => {},
+};
+
+const docketsHubConnection = new HubConnectionBuilder()
+  .withUrl("http://localhost:5000/docketshub")
+  .build();
+
+if (docketsHubConnection.state === HubConnectionState.Disconnected)
+  docketsHubConnection.start();
+
+interface ISelected {
+  initialMovieIndex: number;
+  numberOfDelays: number;
+}
+
+export const DocketContext =
+  createContext<IDocketContext>(defaultDocketContext);
+
+function useDocket(docketId: number): IDocketContext {
   const [docket, setDocket] = useState<Docket | null>(null);
   const [isDocketLoading, setIsDocketLoading] = useState(false);
-
-  const docketsHubConnection = new HubConnectionBuilder()
-    .withUrl("http://localhost:5000/docketshub")
-    .build();
-
-  const startHubConnection = useCallback(() => {
-    if (docketsHubConnection.state === HubConnectionState.Disconnected)
-      docketsHubConnection.start();
-    // eslint-disable-next-line
-  }, [docketsHubConnection.state]);
-
-  useEffect(() => {
-    startHubConnection();
-  }, [startHubConnection]);
+  const [selected, setSelected] = useState<ISelected | null>(null);
 
   const loadDocket = useCallback(() => {
     setIsDocketLoading(true);
@@ -38,13 +58,11 @@ function useDocket(docketId: number) {
       .then((response) => response.data)
       .then((docket) => {
         setIsDocketLoading(false);
-        setDocket(docket)
+        setDocket(docket);
       });
   }, [docketId]);
 
-  useEffect(() => {
-    loadDocket();
-  }, [loadDocket]);
+  useEffect(loadDocket, [loadDocket]);
 
   docketsHubConnection.on(DocketEvent.MovieAdded, function (addedMovie: Movie) {
     if (docket == null) return;
@@ -62,6 +80,15 @@ function useDocket(docketId: number) {
     }
   );
 
+  useEffect(() => {
+    docketsHubConnection.on(
+      DocketEvent.MovieSelected,
+      function (initialMovieIndex: number, numberOfDelays: number) {
+        setSelected({ initialMovieIndex, numberOfDelays });
+      }
+    );
+  }, []);
+
   function addMovie(movieId: number) {
     return docketsHubConnection.send(DocketEvent.AddMovie, docketId, movieId);
   }
@@ -78,20 +105,13 @@ function useDocket(docketId: number) {
     return docketsHubConnection.send(DocketEvent.SelectMovie, docketId);
   }
 
-  function registerEventHandler(
-    docketEvent: DocketEvent,
-    handler: (...args: any[]) => void
-  ) {
-    docketsHubConnection.on(docketEvent, handler);
-  }
-
   return {
     docket,
     isDocketLoading,
+    selected,
     addMovie,
     removeMovie,
     selectMovie,
-    registerEventHandler,
   };
 }
 

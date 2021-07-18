@@ -5,7 +5,7 @@ namespace FingergunsApi.Domain.Dockets
     public interface IDocketRandomNumberGenerator
     {
         int GetRandomMovieIndex(int numberOfMovies);
-        double[] GetSelectionDelays(int numberOfMovies);
+        int GetNumberOfDelays(int numberOfMovies);
         void SetRandom(Random random);
     }
 
@@ -18,29 +18,22 @@ namespace FingergunsApi.Domain.Dockets
             return _random.Next(numberOfMovies);
         }
 
-        public double[] GetSelectionDelays(int numberOfMovies)
+        public int GetNumberOfDelays(int numberOfMovies)
         {
             int minimumNumberOfDelays = GetMinimumNumberOfDelays(numberOfMovies);
             int maximumNumberOfDelays = GetMaximumNumberOfDelays(numberOfMovies);
             int numberOfDelays = _random.Next(minimumNumberOfDelays, maximumNumberOfDelays);
-
-            var delays = new double[numberOfDelays];
-            for (var i = 0; i < numberOfDelays; i++)
-            {
-                delays[i] = GetPickerDelay(i, numberOfDelays);
-            }
-
-            return delays;
+            return numberOfDelays;
         }
 
         private int GetMinimumNumberOfDelays(int numberOfMovies)
         {
-            return numberOfMovies * numberOfMovies * 2;
+            return numberOfMovies * 2;
         }
 
         private int GetMaximumNumberOfDelays(int numberOfMovies)
         {
-            return numberOfMovies * numberOfMovies * 3;
+            return numberOfMovies * 4;
         }
 
         private double GetPickerDelay(int currentIteration, int numberOfDelays)

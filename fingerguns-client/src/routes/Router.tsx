@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 
 import { Switch, Route } from "react-router";
 
-import MoviesPage from "pages/MoviesPage";
+import DocketPage from "pages/DocketPage";
 
 interface SiteRoute {
   path: string;
@@ -12,8 +12,8 @@ interface SiteRoute {
 function Router() {
   const siteRoutes: SiteRoute[] = [
     {
-      path: "/movies",
-      component: MoviesPage
+      path: "/dockets/:docketId",
+      component: <DocketPage />,
     },
     {
       path: "/groups",

@@ -35,8 +35,8 @@ namespace FingergunsApi.App.Hubs
             var docket = await _docketsRepository.GetDocketAsync(docketId);
             var movieCount = docket.Movies.Count;
             var initialMovieIndex = _docketRandomNumberGenerator.GetRandomMovieIndex(movieCount);
-            var selectionDelays = _docketRandomNumberGenerator.GetSelectionDelays(movieCount);
-            await Clients.All.SendAsync("MovieSelected", initialMovieIndex, selectionDelays);
+            var numberOfDelays = _docketRandomNumberGenerator.GetNumberOfDelays(movieCount);
+            await Clients.All.SendAsync("MovieSelected", initialMovieIndex, numberOfDelays);
         }
     }
 }

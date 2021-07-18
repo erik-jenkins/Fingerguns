@@ -13,8 +13,8 @@ import Logo from "./Logo";
 function Navbar() {
   const leftNavLinks = [
     {
-      to: "/movies",
-      text: "Movies",
+      to: "/dockets/1",
+      text: "Dockets",
       icon: faTicketAlt
     },
     {
